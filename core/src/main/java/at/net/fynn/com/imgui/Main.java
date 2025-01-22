@@ -124,21 +124,36 @@ public class Main extends ApplicationAdapter {
                 ImGui.text("Tab 2");
 
                 if (ImGui.button("Crashes the program, not joking")) {
-                    
+
                     throw new RuntimeException("as i said, it crashes");
                 }
-
+                /*
                 boolean colorpickercheckboxactive = false;
 
                 if (ImGui.button("enable color picker")) {
-                    colorpickercheckboxactive = true; 
+                    colorpickercheckboxactive = true;
                 }
 
                 if (ImGui.checkbox("color picker test",colorpickercheckboxactive)) {
                     ImGui.colorPicker3("color picker", new float[]{0.1f, 0.1f, 0.1f, 0.1f}, 0);
                 }
+                 */
 
-                
+                boolean colorpickeropen = false;
+                if (ImGui.button("ColorPicker")) {
+                    colorpickeropen = true;
+                }
+                while (colorpickeropen == true) {
+
+                    ImGui.text("colorpicker open");
+
+                    if (ImGui.button("close colorpicker")) {
+                        colorpickeropen = false;
+                    }
+
+                }
+
+
 
                 ImGui.endTabItem();
             }
@@ -147,7 +162,7 @@ public class Main extends ApplicationAdapter {
 
 
             //ImGui.showDemoWindow();
-            
+
 
             //Gane (left)
             ImGui.setNextWindowSize(650, 480);
@@ -165,7 +180,7 @@ public class Main extends ApplicationAdapter {
             if (ImGui.isItemHovered()) {
                 ImGui.setTooltip("BUTTONGROUP");
             }
-            
+
             if (ImGui.button("BUTTON_1")) {
                 ImGui.openPopup("button_1_popup");
 
@@ -173,14 +188,14 @@ public class Main extends ApplicationAdapter {
             ImGui.endGroup();
 
 
-            
+
             ImGui.end();
 
 
 
 
 
-            
+
             // ---
 
             ImGui.render();
