@@ -1,29 +1,38 @@
 package at.net.fynn.com.imgui;
 
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Graphics;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+
 import imgui.ImGui;
 import imgui.ImGuiIO;
+import imgui.flag.ImGuiWindowFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
+
+
+
 
 /**
  * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms.
  */
 
 public class Main extends ApplicationAdapter {
+
     private SpriteBatch batch;
     private Texture image;
 
     private MyImgui myImgui;
 
     @Override
+    //general create
     public void create() {
         batch = new SpriteBatch();
         image = new Texture("libgdx.png");
@@ -32,6 +41,7 @@ public class Main extends ApplicationAdapter {
     }
 
     @Override
+    //general render
     public void render() {
         Gdx.gl.glClearColor(0.15f, 0.15f, 0.2f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -41,12 +51,12 @@ public class Main extends ApplicationAdapter {
     }
 
     @Override
+    //general dispose
     public void dispose() {
         batch.dispose();
         image.dispose();
         myImgui.dispose();
     }
-
     static class MyImgui {
 
         ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
@@ -57,7 +67,7 @@ public class Main extends ApplicationAdapter {
         }
 
 
-        //create Imgui instance
+        //ImGui create
         public void create() {
             long windowHandle = ((Lwjgl3Graphics) Gdx.graphics).getWindow().getWindowHandle();
             GLFW.glfwMakeContextCurrent(windowHandle);
@@ -72,27 +82,112 @@ public class Main extends ApplicationAdapter {
             imGuiGl3.init("#version 110");
         }
 
-        //render everything on screen, like Imgui buttons and text
+        //ImGui render
         public void render() {
+
+
             imGuiGlfw.newFrame();
             ImGui.newFrame();
 
-            // --- ImGUI draw commands go here ---
+            ImGui.styleColorsDark();
 
-            ImGui.button("Button");
-            ImGui.text("[string mit text]Lorem Ipsum und so weiter und so fort. \nUnd mit (backslash n) kommt ne neue Zeile");
+            // --- ImGUI ---
+            //Main Menu Bar
+            if (ImGui.beginMainMenuBar()) {
+                if (ImGui.beginMenu("Options", true)) {
+                    if (ImGui.menuItem("Exit", "CTRL+Q")) {
+                        Gdx.app.exit();
+                    }
+                    ImGui.endMenu();
+                }
+                ImGui.endMainMenuBar();
+            }
 
+            //Info (right)
+            ImGui.setNextWindowPos(650, 19);
+            ImGui.setNextWindowSize(650, 800);
 
-            ImGui.begin("window 1");
-            ImGui.text("hola");
+            ImGui.begin("INFO", ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoCollapse);
+
+            ImGui.beginTabBar("tabs");
+            if (ImGui.beginTabItem("PROPERTIES")) {
+
+                ImGui.text("temp propertys tab 1");
+                ImGui.button("Button");
+
+                ImGui.text("[string mit text]Lorem Ipsum und so weiter und so fort. \nUnd mit (backslash n) kommt ne neue Zeile");
+
+                ImGui.endTabItem();
+            }
+            if (ImGui.beginTabItem("tab 2")) {
+
+                ImGui.text("Tab 2");
+
+                if (ImGui.button("Crashes the program, not joking")) {
+                    
+                    throw new RuntimeException("as i said, it crashes");
+                }
+
+                boolean colorpickercheckboxactive = false;
+
+                if (ImGui.button("enable color picker")) {
+                    colorpickercheckboxactive = true; 
+                }
+
+                if (ImGui.checkbox("color picker test",colorpickercheckboxactive)) {
+                    ImGui.colorPicker3("color picker", new float[]{0.1f, 0.1f, 0.1f, 0.1f}, 0);
+                }
+
+                
+
+                ImGui.endTabItem();
+            }
+            ImGui.endTabBar();
             ImGui.end();
 
+
+            //ImGui.showDemoWindow();
+            
+
+            //Gane (left)
+            ImGui.setNextWindowSize(650, 480);
+            ImGui.setNextWindowPos(0, 19);
+            ImGui.begin("GAME", ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoCollapse);
+            ImGui.image(1, 600, 400);
+            ImGui.end();
+
+            //Menu (bottom)
+            ImGui.setNextWindowPos(0, 500);
+            ImGui.setNextWindowSize(650, 450);
+            ImGui.begin("MENU", ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoCollapse);
+            ImGui.beginGroup();
+            ImGui.text("BUTTONGROUP");
+            if (ImGui.isItemHovered()) {
+                ImGui.setTooltip("BUTTONGROUP");
+            }
+            
+            if (ImGui.button("BUTTON_1")) {
+                ImGui.openPopup("button_1_popup");
+
+            }
+            ImGui.endGroup();
+
+
+            
+            ImGui.end();
+
+
+
+
+
+            
             // ---
 
             ImGui.render();
             imGuiGl3.renderDrawData(ImGui.getDrawData());
         }
 
+        //ImGui dispose
         public void dispose() {
             imGuiGl3.dispose();
             imGuiGlfw.dispose();
