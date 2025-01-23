@@ -1,0 +1,23 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "gradle",
+			"id": "f:\\Fynn dinge\\Fynn Informatik [WORKING]\\informatik_project_fynnbuildinformatik_project_fynn",
+			"script": "build",
+			"description": "Assembles and tests this project.",
+			"group": "build",
+			"project": "informatik_project_fynn",
+			"buildFile": "F:\\Fynn dinge\\Fynn Informatik [WORKING]\\informatik_project_fynn\\build.gradle",
+			"rootProject": "informatik_project_fynn",
+			"projectFolder": "f:\\Fynn dinge\\Fynn Informatik [WORKING]\\informatik_project_fynn",
+			"workspaceFolder": "f:\\Fynn dinge\\Fynn Informatik [WORKING]\\informatik_project_fynn",
+			"args": "",
+			"javaDebug": false,
+			"problemMatcher": [
+				"$gradle"
+			],
+			"label": "gradle: build"
+		}
+	]
+}

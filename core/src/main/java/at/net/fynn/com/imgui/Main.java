@@ -14,6 +14,8 @@ import imgui.ImGuiIO;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
+import imgui.type.ImString;
+
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 
@@ -57,6 +59,41 @@ public class Main extends ApplicationAdapter {
         image.dispose();
         myImgui.dispose();
     }
+
+
+    public static String newGameLog(String logTag, String logMessage) {
+        //White Log message / normal log message
+        ImGui.begin("Console");
+
+        ImGui.text("[" + logTag + "] " + logMessage);
+
+        ImGui.end();
+        return "[" + logTag + "] " + logMessage;
+    }
+
+    public static String newGameLogError(String logTag, String logMessage) {
+        //Red Log message
+        ImGui.begin("Console");
+
+        ImGui.textColored(227, 43, 43,255, "[" + logTag + "/ERROR] " + logMessage);
+
+        ImGui.end();
+        return "[" + logTag + "/ERROR] " + logMessage;
+    }
+
+    public static String newGameLogWarning(String logTag, String logMessage) {
+        //Yellow Log message
+
+
+        ImGui.textColored(199, 160, 18,255, "[" + logTag + "/WARNING] " + logMessage);
+
+   
+        return "[" + logTag + "/WARNING] " + logMessage;
+    }
+        
+
+
+
     static class MyImgui {
 
         ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
@@ -64,6 +101,7 @@ public class Main extends ApplicationAdapter {
 
         public MyImgui() {
             create();
+            
         }
 
 
@@ -80,6 +118,7 @@ public class Main extends ApplicationAdapter {
 
             imGuiGlfw.init(windowHandle, true);
             imGuiGl3.init("#version 110");
+
         }
 
         //ImGui render
@@ -91,12 +130,46 @@ public class Main extends ApplicationAdapter {
 
             ImGui.styleColorsDark();
 
+            
+            
+            
+            
+
             // --- ImGUI ---
+            //ImGui.setNextWindowPos(0, 650);
+            //ImGui.setNextWindowSize(650, 150);
+
+
+            ImGui.begin("Console");
+
+            
+            newGameLog("CONSOLE/DEBUG", "REGISTER CONSOLE");
+            ImGui.text("---------------------------");
+            newGameLogError("CONSOLE/DEBUG", "DEBUG ERROR");
+            newGameLogWarning("CONSOLE/DEBUG", "DEBUG WARNING");
+            ImGui.end();
+
+
             //Main Menu Bar
             if (ImGui.beginMainMenuBar()) {
                 if (ImGui.beginMenu("Options", true)) {
                     if (ImGui.menuItem("Exit", "CTRL+Q")) {
                         Gdx.app.exit();
+                    }
+                    if (ImGui.menuItem("restart", "CTRL+R")) {
+                        Gdx.app.log("restart", "No restart method found");
+                    }
+                    ImGui.endMenu();
+                }
+                if (ImGui.beginMenu("View")) {
+                    if (ImGui.menuItem("Debug")) {
+                        ImGui.begin("Console");
+                        newGameLogWarning("CONSOLE/DEBUG", "DEBUG WARNING from menu bar");
+                        ImGui.end();
+                    }
+                    if (ImGui.menuItem("Collapse all")) {
+                        ImGui.openPopup("Debug");
+                        ImGui.setWindowCollapsed("Console", true);
                     }
                     ImGui.endMenu();
                 }
@@ -107,14 +180,15 @@ public class Main extends ApplicationAdapter {
             ImGui.setNextWindowPos(650, 19);
             ImGui.setNextWindowSize(650, 800);
 
+            
             ImGui.begin("INFO", ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoCollapse);
 
             ImGui.beginTabBar("tabs");
             if (ImGui.beginTabItem("PROPERTIES")) {
+                
 
                 ImGui.text("temp propertys tab 1");
                 ImGui.button("Button");
-
                 ImGui.text("[string mit text]Lorem Ipsum und so weiter und so fort. \nUnd mit (backslash n) kommt ne neue Zeile");
 
                 ImGui.endTabItem();
@@ -128,37 +202,30 @@ public class Main extends ApplicationAdapter {
                     throw new RuntimeException("as i said, it crashes");
                 }
 
-                boolean colorpickercheckboxactive = false;
-
-                if (ImGui.button("enable color picker")) {
-                    colorpickercheckboxactive = true; 
+                if (ImGui.button("Get Application Logger")) {
+                    
+                    Gdx.app.log("APPLOGGER", "get app logger, tbd");
+                    
                 }
-
-                if (ImGui.checkbox("color picker test",colorpickercheckboxactive)) {
-                    ImGui.colorPicker3("color picker", new float[]{0.1f, 0.1f, 0.1f, 0.1f}, 0);
-                }
-
-                
 
                 ImGui.endTabItem();
             }
             ImGui.endTabBar();
             ImGui.end();
-
+            
+            ImGui.begin("Console");
+            newGameLog("DEBUG", "imgui new window");
+            ImGui.end();
 
             //ImGui.showDemoWindow();
             
+            
 
-            //Gane (left)
-            ImGui.setNextWindowSize(650, 480);
-            ImGui.setNextWindowPos(0, 19);
-            ImGui.begin("GAME", ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoCollapse);
-            ImGui.image(1, 600, 400);
-            ImGui.end();
+
 
             //Menu (bottom)
             ImGui.setNextWindowPos(0, 500);
-            ImGui.setNextWindowSize(650, 450);
+            ImGui.setNextWindowSize(650, 150);
             ImGui.begin("MENU", ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoCollapse);
             ImGui.beginGroup();
             ImGui.text("BUTTONGROUP");
@@ -171,15 +238,7 @@ public class Main extends ApplicationAdapter {
 
             }
             ImGui.endGroup();
-
-
-            
             ImGui.end();
-
-
-
-
-
             
             // ---
 
